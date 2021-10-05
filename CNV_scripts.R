@@ -50,7 +50,7 @@ import_cnv <- function(file.path = 'OS1-OS31.seg', coords = chromCoordsHg19){
   return(list = list('cnvMat' = cnvMat, 'coordMat' = coordMat))
 }
 
-cnv_plot <- function(cnvMat, coordMat, rownames = TRUE, title = '', cluster_rows = TRUE){
+cnv_plot <- function(cnvMat, coordMat, rownames = TRUE, title = '', cluster_rows = TRUE, borders = TRUE){
   coordMat$labels <- paste0('chr',coordMat$chr)
 
   colors = list( chr = setNames(rep(c('black', 'white'), 11), unique(coordMat$labels)))
@@ -69,12 +69,24 @@ cnv_plot <- function(cnvMat, coordMat, rownames = TRUE, title = '', cluster_rows
 
   heatmap <- Heatmap(t(cnvMat), col = colorRamp2(c(x.range[1], x.center , x.range[2]), c("darkblue", "white", "darkred"), transparency = 0, space = "LAB"),
                      column_split = factor(coordMat$labels, levels = unique(coordMat$labels)),
+                     #row_split = colnames(cnvMat),
                      top_annotation = chr_annotation_1, #left_annotation  = ha,
-                      border = TRUE,show_row_dend = FALSE,
-                         column_title_rot = 90, column_gap = unit(0, 'mm'),
-                         show_column_names = FALSE, column_title_gp = gpar(fontsize = 9), row_title_gp = gpar(fontsize = 10),
-                         cluster_columns = FALSE, cluster_rows = cluster_rows,  show_row_names = rownames,
-                         heatmap_legend_param = list(legend_direction = "horizontal", legend_width = unit(2, "cm"), title_position='topcenter', title = "Expression", border = "black"),
+                     border = borders,
+                     show_row_dend = FALSE,
+                     row_title = title,
+                     column_title_rot = 90,
+                     column_gap = unit(0, 'mm'),
+                     row_gap = unit(0, 'mm'),
+                     show_column_names = FALSE,
+                     column_title_gp = gpar(fontsize = 9),
+                     row_title_gp = gpar(fontsize = 9),
+                     cluster_columns = FALSE,
+                     cluster_rows = cluster_rows,
+                     show_row_names = rownames,
+                     heatmap_legend_param = list(legend_direction = "horizontal",
+                                                 legend_width = unit(2, "cm"),
+                                                 title_position='topcenter',
+                                                 title = "Expression", border = "black"),
                          #height  = unit(0.25 * dim(cnvMat)[1] , "cm")
                      , show_heatmap_legend = FALSE )
   return(heatmap)

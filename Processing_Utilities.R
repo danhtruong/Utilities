@@ -1,11 +1,11 @@
-
-path_input <- function(path){
+#generates the path to each library and the meta data
+path_input <- function(path, library.split, sample.split){
   list_of_files <- list.dirs(path, recursive = FALSE)
   list_of_files <- data.frame('path' = list_of_files)
   list_of_files$path <- sapply(list_of_files$path, function(x) { paste0(x, '/outs')})
   list_of_files$h5 <- sapply(list_of_files$path, function(x) { paste0(x, '/filtered_feature_bc_matrix.h5')})
-  list_of_files$library_id <- sapply(strsplit(list_of_files$path, split="/"), "[[", 3)
-  list_of_files$sample_type <- sapply(strsplit(list_of_files$library_id, split="-"), "[[", 4)
+  list_of_files$library_id <- sapply(strsplit(list_of_files$path, split="/"), "[[", library.split)
+  list_of_files$sample_type <- sapply(strsplit(list_of_files$library_id, split="-"), "[[", sample.split)
   list_of_files$metrics_path <- paste0(list_of_files$path,'/metrics_summary.csv')
   return(list_of_files)
 }
